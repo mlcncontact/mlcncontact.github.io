@@ -73,9 +73,9 @@ $$
 \begin{equation}
 \begin{split}
 
-\mathbf{x}^T \mathbf{L} \mathbf{x} & = \underbrace{\mathbf{x}_a^2 + 3\mathbf{x}_b^2 + \mathbf{x}_c^2 + \mathbf{x}_d^2}_{\substack{\textrm{one square term per} \\ \text{connection to a node}}} \underbrace{- 2\mathbf{x}_a \mathbf{x}_b - 2\mathbf{x}_b \mathbf{x}_c - 2\mathbf{x}_b \mathbf{x}_d}_\textrm{two cross terms for each connection} \\
+\mathbf{x}^T \mathbf{L} \mathbf{x} & = \underbrace{x_a^2 + 3x_b^2 + x_c^2 + x_d^2}_{\substack{\textrm{one square term per} \\ \text{connection to a node}}} \underbrace{- 2x_a x_b - 2x_b x_c - 2x_b x_d}_\textrm{two cross terms for each connection} \\
 
-& = (\mathbf{x}_a - \mathbf{x}_b)^2 + (\mathbf{x}_b - \mathbf{x}_c)^2 + (\mathbf{x}_b - \mathbf{x}_d)^2
+& = (x_a - x_b)^2 + (x_b - x_c)^2 + (x_b - x_d)^2
 
 \end{split}
 \end{equation}
