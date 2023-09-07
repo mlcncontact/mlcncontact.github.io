@@ -82,3 +82,67 @@ $$
 Thus, during learning, each element of $$\mathbf{W}$$ independently and exponentially decays towards its fixed point, with time constant $$\tau$$.
 
 To summarize, for a linear regression model and orthogonal input variables, (1) different weights do not interact with each other, (2) the learning process has a single fixed point ($$\mathbf{W}^{FP} = \mathbf{C}^{31}$$), which is stable, and (3) all weights learn with the same time scale. Next, we consider a linear neural network with a single hidden layer, which simply replaces the weight matrix $$\mathbf{W}$$ of linear regression with a product of two matrices $$\mathbf{W}^{32} \mathbf{W}^{21}$$ as its input-output mapping. However, as we will see, despite the similarity, it exhibits very different learning dynamics, where all three of our conclusions about linear regression are no longer true.
+
+## Learning dynamics of linear neural networks
+
+As before, we start with our loss function $$L = \sum_{\mu} {\| \mathbf{y}^{\mu} - \mathbf{W}^{32} \mathbf{W}^{21} \mathbf{x}^{\mu} \|}^2 $$, and take its partial derivative with respect to an element of the input-to-hidden weight matrix:
+
+$$
+\begin{equation}
+\begin{split}
+
+\frac{\partial L}{\partial W_{ij}^{21}} & = \sum_{\mu} \sum_{k} \frac{\partial}{\partial W_{ij}^{21}} (\mathbf{y}^{\mu} - \mathbf{W}^{32} \mathbf{W}^{21} \mathbf{x}^{\mu})_k^2 \\
+& = \sum_{\mu} \sum_{k} 2(\mathbf{y}^{\mu} - \mathbf{W}^{32} \mathbf{W}^{21} \mathbf{x}^{\mu})_k \frac{\partial}{\partial W_{ij}^{21}} (- \sum_{m} \sum_{n} W_{kn}^{32} W_{nm}^{21} x_m^{\mu}) \\
+& = -2 \sum_{\mu} \sum_{k} (\mathbf{y}^{\mu} - \mathbf{W}^{32} \mathbf{W}^{21} \mathbf{x}^{\mu})_k W_{ki}^{32} x_j^{\mu} \\
+& = -2 \sum_{\mu} [\mathbf{W}^{32T} (\mathbf{y}^{\mu} - \mathbf{W}^{32} \mathbf{W}^{21} \mathbf{x}^{\mu})]_i x_j^{\mu}
+
+\end{split}
+\end{equation}
+$$
+
+In matrix form, this is
+
+$$
+\begin{equation}
+\begin{split}
+
+\nabla_{\mathbf{W}^{21}} L & = -2 \sum_{\mu} \mathbf{W}^{32T} (\mathbf{y}^{\mu} - \mathbf{W}^{32} \mathbf{W}^{21} \mathbf{x}^{\mu}) \mathbf{x}^{\mu T} \\
+& = -2 \mathbf{W}^{32T} (\mathbf{C}^{31} - \mathbf{W}^{32} \mathbf{W}^{21} \mathbf{C}^{11})
+
+\end{split}
+\end{equation}
+$$
+
+Again, the gradient update steps for $$\mathbf{W}^{21}$$ can be approximated with a differential equation:
+
+$$
+\begin{equation}
+\tag{1}
+
+\tau \frac{d \mathbf{W}^{21}}{dt} = \mathbf{W}^{32T} (\mathbf{C}^{31} - \mathbf{W}^{32} \mathbf{W}^{21})
+
+\end{equation}
+$$
+
+where we've assumed $$\mathbf{C}^{11} = \mathbf{I}$$. We can do similar calculations to obtain the equation for $$\mathbf{W}^{32}$$:
+
+$$
+\begin{equation}
+\tag{2}
+
+\tau \frac{d \mathbf{W}^{32}}{dt} = (\mathbf{C}^{31} - \mathbf{W}^{32} \mathbf{W}^{21}) \mathbf{W}^{21T}
+
+\end{equation}
+$$
+
+These equations show that the weights no longer evolve independently of each other. For example, consider $$\mathbf{W}_{ij}^{21}$$:
+
+$$
+\begin{equation}
+
+\tau \frac{d \mathbf{W}_{ij}^{21}}{dt} = \sum_{k} W^{32}_{ki} C^{31}_{kj} - \sum_{k} \sum_{m} W^{32}_{ki} W^{32}_{km} W^{21}_{mj}
+
+\end{equation}
+$$
+
+Thus, changes in one weight depends on up to cubic interactions involving other weights in the same layer as well as weights in a different layer.
