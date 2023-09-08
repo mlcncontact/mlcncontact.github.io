@@ -135,14 +135,25 @@ $$
 \end{equation}
 $$
 
-These equations show that the weights no longer evolve independently of each other. For example, consider $$\mathbf{W}_{ij}^{21}$$:
+These equations show that the weights no longer evolve independently of each other. For example, consider $$W_{ij}^{21}$$:
 
 $$
 \begin{equation}
 
-\tau \frac{d \mathbf{W}_{ij}^{21}}{dt} = \sum_{k} W^{32}_{ki} C^{31}_{kj} - \sum_{k} \sum_{m} W^{32}_{ki} W^{32}_{km} W^{21}_{mj}
+\tau \frac{d W_{ij}^{21}}{dt} = \sum_{k} W^{32}_{ki} C^{31}_{kj} - \sum_{k} \sum_{m} W^{32}_{ki} W^{32}_{km} W^{21}_{mj}
 
 \end{equation}
 $$
 
-Thus, changes in one weight depends on up to cubic interactions involving other weights in the same layer as well as weights in a different layer.
+Thus, changes in one weight depends on up to cubic interactions involving weights in the same layer as well as weights in a different layer. This is not easy to understand; to simplify these interactions, we will change to more convenient bases for the input and output spaces--bases consisting of the right and left singular vectors of the input-output correlation matrix $$\mathbf{C}^{31}$$. Consider the singular value decomposition $$\mathbf{C}^{31} = \mathbf{U}^{33} \mathbf{S}^{31} \mathbf{V}^{11T} $$. The columns of the $$N_3 \times N_3$$ matrix $$\mathbf{U}^{33}$$ are an orthonormal basis for the output space; the diagonal of the $$N_3 \times N_1$$ matrix $$\mathbf{S}^{31}$$ contains the singular values $$s_\alpha$$'s; the columns of the $$N_1 \times N_1$$ matrix $$\mathbf{V}^{11}$$ are an orthonormal basis for the input space.
+
+We will now consider the transformed weight matrices $$\overline{\mathbf{W}}^{21} = \mathbf{W}^{21} \mathbf{V}^{11}$$ and $$\overline{\mathbf{W}}^{32} = \mathbf{U}^{33T} \mathbf{W}^{32} $$. $$\overline{\mathbf{W}}^{21}_{i \alpha}$$ is the connection strength from input in the direction of the $$\alpha$$th right singular vector to hidden unit $$i$$; $$\overline{\mathbf{W}}^{32}_{\alpha i}$$ is the connection strength from hidden unit $$i$$ to output in the direction of the $$\alpha$$th left singular vector. With these transformed variables, equations $$(1)$$ and $$(2)$$ becomes:
+
+$$
+\begin{equation}
+\tag{3}
+
+\tau \frac{d \mathbf{W}^{21}}{dt} = \mathbf{W}^{32T} (\mathbf{C}^{31} - \mathbf{W}^{32} \mathbf{W}^{21})
+
+\end{equation}
+$$
