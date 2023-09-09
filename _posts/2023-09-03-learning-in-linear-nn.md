@@ -81,7 +81,7 @@ $$
 
 Thus, during learning, each element of $$\mathbf{W}$$ independently and exponentially decays towards its fixed point, with time constant $$\tau$$.
 
-To summarize, for a linear regression model and orthogonal input variables, (1) different weights do not interact with each other, (2) the learning process has a single fixed point ($$\mathbf{W}^{FP} = \mathbf{C}^{31}$$), which is stable, and (3) all weights learn with the same time scale. Next, we consider a linear neural network with a single hidden layer, which simply replaces the weight matrix $$\mathbf{W}$$ of linear regression with a product of two matrices $$\mathbf{W}^{32} \mathbf{W}^{21}$$ as its input-output mapping. However, as we will see, despite the similarity, it exhibits very different learning dynamics, where all three of our conclusions about linear regression are no longer true.
+To summarize, for a linear regression model and orthogonal input variables, (i) different weights do not interact with each other, (ii) the learning process has a single fixed point ($$\mathbf{W}^{FP} = \mathbf{C}^{31}$$), which is stable, and (iii) all weights learn with the same time scale. Next, we consider a linear neural network with a single hidden layer, which simply replaces the weight matrix $$\mathbf{W}$$ of linear regression with a product of two matrices $$\mathbf{W}^{32} \mathbf{W}^{21}$$ as its input-output mapping. However, as we will see, despite the similarity, it exhibits very different learning dynamics, where all three of our conclusions about linear regression are no longer true.
 
 ## Learning dynamics of linear neural networks
 
@@ -145,15 +145,48 @@ $$
 \end{equation}
 $$
 
-Thus, changes in one weight depends on up to cubic interactions involving weights in the same layer as well as weights in a different layer. This is not easy to understand; to simplify these interactions, we will change to more convenient bases for the input and output spaces--bases consisting of the right and left singular vectors of the input-output correlation matrix $$\mathbf{C}^{31}$$. Consider the singular value decomposition $$\mathbf{C}^{31} = \mathbf{U}^{33} \mathbf{S}^{31} \mathbf{V}^{11T} $$. The columns of the $$N_3 \times N_3$$ matrix $$\mathbf{U}^{33}$$ are an orthonormal basis for the output space; the diagonal of the $$N_3 \times N_1$$ matrix $$\mathbf{S}^{31}$$ contains the singular values $$s_\alpha$$'s; the columns of the $$N_1 \times N_1$$ matrix $$\mathbf{V}^{11}$$ are an orthonormal basis for the input space.
+Thus, changes in one weight depends on up to cubic interactions involving weights in the same layer as well as weights in a different layer. This is not easy to understand; to simplify these interactions, we will change to more convenient bases for the input and output spaces--bases consisting of the right and left singular vectors of the input-output correlation matrix $$\mathbf{C}^{31}$$. For this, let the singular value decomposition of $$\mathbf{C}^{31}$$ be $$\mathbf{C}^{31} = \mathbf{U}^{33} \mathbf{S}^{31} \mathbf{V}^{11T} $$. The columns of the $$N_3 \times N_3$$ matrix $$\mathbf{U}^{33}$$ are an orthonormal basis for the output space; the diagonal of the $$N_3 \times N_1$$ matrix $$\mathbf{S}^{31}$$ contains the singular values $$s_\alpha$$'s in descending order; the columns of the $$N_1 \times N_1$$ matrix $$\mathbf{V}^{11}$$ are an orthonormal basis for the input space.
 
-We will now consider the transformed weight matrices $$\overline{\mathbf{W}}^{21} = \mathbf{W}^{21} \mathbf{V}^{11}$$ and $$\overline{\mathbf{W}}^{32} = \mathbf{U}^{33T} \mathbf{W}^{32} $$. $$\overline{\mathbf{W}}^{21}_{i \alpha}$$ is the connection strength from input in the direction of the $$\alpha$$th right singular vector to hidden unit $$i$$; $$\overline{\mathbf{W}}^{32}_{\alpha i}$$ is the connection strength from hidden unit $$i$$ to output in the direction of the $$\alpha$$th left singular vector. With these transformed variables, equations $$(1)$$ and $$(2)$$ becomes:
+We will now consider the transformed weight matrices $$\overline{\mathbf{W}}^{21} = \mathbf{W}^{21} \mathbf{V}^{11}$$ and $$\overline{\mathbf{W}}^{32} = \mathbf{U}^{33T} \mathbf{W}^{32} $$. Here $$\overline{\mathbf{W}}^{21}_{i \alpha}$$ is the connection strength from input mode $$\alpha$$ (input in the direction of the $$\alpha$$th right singular vector) to hidden unit $$i$$; $$\overline{\mathbf{W}}^{32}_{\alpha i}$$ is the connection strength from hidden unit $$i$$ to output mode $$\alpha$$ (output in the direction of the $$\alpha$$th left singular vector). With these transformed variables, equations $$(1)$$ and $$(2)$$ become:
 
 $$
 \begin{equation}
 \tag{3}
 
-\tau \frac{d \mathbf{W}^{21}}{dt} = \mathbf{W}^{32T} (\mathbf{C}^{31} - \mathbf{W}^{32} \mathbf{W}^{21})
+\tau \frac{d \overline{\mathbf{W}}^{21}}{dt} = \overline{\mathbf{W}}^{32T} (\mathbf{S}^{31} - \overline{\mathbf{W}}^{32} \overline{\mathbf{W}}^{21})
 
 \end{equation}
+$$
+
+$$
+\begin{equation}
+\tag{4}
+
+\tau \frac{d \overline{\mathbf{W}}^{32}}{dt} = (\mathbf{S}^{31} - \overline{\mathbf{W}}^{32} \overline{\mathbf{W}}^{21}) \overline{\mathbf{W}}^{21T} 
+
+\end{equation}
+$$
+
+In the following, I'll use $$\mathbf{A}_{:i}$$ to denote the $$i$$th column of a matrix $$\mathbf{A}$$, and $$\mathbf{A}_{i:}$$ to denote the $$i$$th row. Let $$\mathbf{a}^{\alpha} = \overline{\mathbf{W}}^{21}_{:\alpha}$$; this is a vector in the space of hidden units--input mode $$\alpha$$ activates hidden units along this direction. Let $$\mathbf{b}^{\alpha T} = \overline{\mathbf{W}}^{32}_{\alpha :}$$; this is another vector in hidden units space--hidden unit activity along this direction activates output mode $$\alpha$$. For simplicity, we'll assume that $$N_1 = N_3$$, so that there are equal numbers of input and output modes ($$N_1 \neq N_3$$ adds a bit of uninteresting complexity); this would be the case if the network is used as an autoencoder, for example. Then, from equation $$(3)$$, we can find the learning dynamics of $$\mathbf{a}^{\alpha}$$:
+
+$$
+\begin{align}
+
+\tau \frac{d \overline{\mathbf{W}}^{21}_{:\alpha}}{dt} &= \overline{\mathbf{W}}^{32T} (\mathbf{S}^{31} - \overline{\mathbf{W}}^{32} \overline{\mathbf{W}}^{21})_{:\alpha} \\
+\tau \frac{d \mathbf{a}^{\alpha}}{dt} &= (\overline{\mathbf{W}}^{32T})_{:\alpha} s_{\alpha} - \overline{\mathbf{W}}^{32T} \overline{\mathbf{W}}^{32} \overline{\mathbf{W}}^{21}_{:\alpha} \\
+\tau \frac{d \mathbf{a}^{\alpha}}{dt} &= s_{\alpha} \mathbf{b}^{\alpha} - \sum_{\gamma = 1}^{N_3} (\mathbf{b}^{\gamma T} \mathbf{a}^{\alpha}) \mathbf{b}^{\gamma} \\
+
+\tau \frac{d \mathbf{a}^{\alpha}}{dt} &= (s_{\alpha} - \mathbf{b}^{\alpha T} \mathbf{a}^{\alpha}) \mathbf{b}^{\alpha} - \sum_{\gamma \neq \alpha} (\mathbf{b}^{\gamma T} \mathbf{a}^{\alpha}) \mathbf{b}^{\gamma} \tag{5}
+
+\end{align}
+$$
+
+Similarly, from equation $$(4)$$ we can find the learning dynamics of $$\mathbf{b}^{\alpha}$$ to be
+
+$$
+\begin{align}
+
+\tau \frac{d \mathbf{b}^{\alpha}}{dt} &= (s_{\alpha} - \mathbf{b}^{\alpha T} \mathbf{a}^{\alpha}) \mathbf{a}^{\alpha} - \sum_{\gamma \neq \alpha} (\mathbf{b}^{\alpha T} \mathbf{a}^{\gamma}) \mathbf{a}^{\gamma} \tag{6}
+
+\end{align}
 $$
