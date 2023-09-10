@@ -190,3 +190,25 @@ $$
 
 \end{align}
 $$
+
+These equations make it much easier to understand how weights interact during learning. For each $$\alpha$$, the first term of equation $$(5)$$ and equation $$(6)$$ drives $$\mathbf{a}^{\alpha}$$ and $$\mathbf{b}^{\alpha}$$ to point in the same direction, and it drives their dot product towards $$s_{\alpha}$$. The second term of equation $$(5)$$ shrinks the components of $$\mathbf{a}^{\alpha}$$ in the directions of $$\mathbf{b}^{\gamma}$$'s for $$\gamma \neq \alpha$$, whereas the second term of equation $$(6)$$ shrinks the components of $$\mathbf{b}^{\alpha}$$ in the directions of $$\mathbf{a}^{\gamma}$$'s for $$\gamma \neq \alpha$$. 
+
+We can see that equations $$(5)$$ and $$(6)$$ correspond to gradient descent on the loss function $$ \frac{1}{2\tau} \sum_{\alpha} (s_{\alpha} - \mathbf{b}^{\alpha T} \mathbf{a}^{\alpha})^2 + \frac{1}{2\tau} \sum_{\alpha \neq \beta} (\mathbf{b}^{\beta T} \mathbf{a}^{\alpha})^2 $$, which penalizes deviations of $$\mathbf{a}^{\alpha}$$'s and $$\mathbf{b}^{\beta}$$'s from $$\mathbf{b}^{\beta T} \mathbf{a}^{\alpha} = s_{\alpha} \delta_{\alpha \beta}$$ (where $$\delta_{\alpha \beta}$$ is the Kronecker delta). The dot product $$\mathbf{b}^{\beta T} \mathbf{a}^{\alpha}$$ is the extent to which input mode $$\alpha$$ drives output mode $$\beta$$; thus, learning drives the network towards a decoupled regime, where each input mode $$\alpha$$ drives only output mode $$\alpha$$ and none of the other output modes, and it drives output mode $$\alpha$$ to the extent of their input-output correlation $$s_{\alpha}$$ from the training set.
+
+Why does learning drive $$\mathbf{b}^{\alpha T} \mathbf{a}^{\alpha}$$ towards $$s_{\alpha}$$? As we saw above, the optimal input-output mapping we found from linear regression was $$\mathbf{W}^{FP} = \mathbf{C}^{31} = \mathbf{U}^{33} \mathbf{S}^{31} \mathbf{V}^{11T}$$. $$\mathbf{W}^{FP}$$ expresses the optimal input-output mapping in the bases of input variables and output variables, where $$\mathbf{W}^{FP}_{ij}$$ is how much input variable $$j$$ should contribute to output variable $$i$$. The $$s_{\alpha}$$'s express the optimal input-output mapping in the bases of singular vectors, where $$s_{\alpha}$$ is how much input mode $$\alpha$$ should contribute to output mode $$\alpha$$.
+
+Next, let's consider the fixed points of equations $$(5)$$ and $$(6)$$. First, note that $$\mathbf{a}^{\alpha} = \mathbf{b}^{\alpha} = \mathbf{0}$$ for all $$\alpha$$'s is a fixed point. If $$\mathbf{a}^{\alpha}$$ and $$\mathbf{b}^{\alpha}$$ are nonzero for some $$\alpha$$'s, then the condition for a fixed point is for the nonzero $$\mathbf{a}^{\alpha}$$'s and $$\mathbf{b}^{\alpha}$$'s to satisfy $$\mathbf{b}^{\beta T} \mathbf{a}^{\alpha} = s_{\alpha} \delta_{\alpha \beta}$${% include sidenote.html id="fixed-point-family" note="Note that $$\mathbf{b}^{\beta T} \mathbf{a}^{\alpha} = \frac{1}{k} \mathbf{b}^{\beta T} k \mathbf{a}^{\alpha}$$ for some scaling factor $$k$$, so any fixed point is associated with a family of fixed points that differ in the scaling of $$\mathbf{a}^{\alpha}$$'s and $$\mathbf{b}^{\alpha}$$'s." %}. If $$N_2 < N_1$$ and $$N_2 < N_3$$, then there can be at most $$N_2$$ $$\alpha$$'s that satisfy this condition with nonzero $$\mathbf{a}^{\alpha}$$'s and $$\mathbf{b}^{\alpha}$$'s (because there cannot be more than $$N_2$$ mutually orthogonal vectors in a $$N_2$$-dimensional space). Suppose the rank of $$\mathbf{C}^{31}$$ is $$R$$ and $$R > N_2$$. We can get a fixed point by picking any $$N_2$$ pairs of $$\mathbf{a}^{\alpha}$$'s and $$\mathbf{b}^{\alpha}$$'s to satisfy $$\mathbf{b}^{\beta T} \mathbf{a}^{\alpha} = s_{\alpha} \delta_{\alpha \beta}$$, and have $$\mathbf{a}^{\alpha} = \mathbf{b}^{\alpha} = \mathbf{0}$$ for the remaining $$R - N_2$$ pairs. [Baldi and Hornik (1989)](https://www.sciencedirect.com/science/article/abs/pii/0893608089900142) showed that the global minimum is when the nonzero $$\mathbf{a}^{\alpha}$$'s and $$\mathbf{b}^{\alpha}$$'s correspond to the $$N_2$$ largest $$s_{\alpha}$$'s, and that all other fixed points are saddle points. At the global minimum, the input-output mapping of the network is
+
+$$
+\begin{equation}
+\begin{split}
+
+\mathbf{W}^{32} \mathbf{W}^{21} &= \mathbf{U}^{33} \mathbf{U}^{33T} \mathbf{W}^{32} \mathbf{W}^{21} \mathbf{V}^{11} \mathbf{V}^{11T} \\
+&= \mathbf{U}^{33} \overline{\mathbf{W}}^{32} \overline{\mathbf{W}}^{21} \mathbf{V}^{11T} \\
+&= \sum_{\alpha = 1}^{N_2} s_{\alpha} \mathbf{U}^{33}_{:\alpha} \mathbf{V}^{11T}_{:\alpha}
+
+\end{split}
+\end{equation}
+$$
+
+which is the best rank-$$N_2$$ approximation of $$\mathbf{W}^{FP} = \mathbf{C}^{31}$$ (Eckart-Young-Mirsky theorem).
