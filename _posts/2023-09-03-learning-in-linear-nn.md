@@ -81,7 +81,7 @@ $$
 
 Thus, during learning, each element of $$\mathbf{W}$$ independently and exponentially decays towards its fixed point, with time constant $$\tau$$.
 
-To summarize, for a linear regression model and orthogonal input variables, (i) different weights do not interact with each other, (ii) the learning process has a single fixed point ($$\mathbf{W}^{FP} = \mathbf{C}^{31}$$), which is stable, and (iii) all weights learn with the same time scale. Next, we consider a linear neural network with a single hidden layer, which simply replaces the weight matrix $$\mathbf{W}$$ of linear regression with a product of two matrices $$\mathbf{W}^{32} \mathbf{W}^{21}$$ as its input-output mapping. However, as we will see, despite the similarity, it exhibits very different learning dynamics, where all three of our conclusions about linear regression are no longer true.
+To summarize, for a linear regression model and orthogonal input variables, (i) different weights do not interact with each other, (ii) the learning process has a single fixed point ($$\mathbf{W}^{FP} = \mathbf{C}^{31}$$), which is stable, and (iii) all weights learn with the same timescale. Next, we consider a linear neural network with a single hidden layer, which simply replaces the weight matrix $$\mathbf{W}$$ of linear regression with a product of two matrices $$\mathbf{W}^{32} \mathbf{W}^{21}$$ as its input-output mapping. However, as we will see, despite the similarity, it exhibits very different learning dynamics, where all three of our conclusions about linear regression are no longer true.
 
 ## Learning dynamics of linear neural networks
 
@@ -212,3 +212,47 @@ $$
 $$
 
 which is the best rank-$$N_2$$ approximation of $$\mathbf{W}^{FP} = \mathbf{C}^{31}$$ (Eckart-Young-Mirsky theorem).
+
+Next, we will solve equations $$(5)$$ and $$(6)$$ for a special class of weight initializations, where the network is in a decoupled regime to start with, to better understand the timescales of learning. Let $$\mathbf{r}^{\alpha}$$ for $$\alpha = 1, 2, ... N_2$$ be a set of $$N_2 \times 1$$ orthonormal vectors. We initialize the weights at $$\mathbf{a}^{\alpha}(0) = \mathbf{b}^{\alpha}(0) \propto \mathbf{r}^{\alpha}$$ for $$\alpha = 1, 2, ... N_2$$ and $$\mathbf{a}^{\alpha}(0) = \mathbf{b}^{\alpha}(0) = 0$$ for $$\alpha > N_2$$. Because of the orthogonality of the $$\mathbf{r}^{\alpha}$$'s, the second term of equation $$(5)$$ and equation $$(6)$$ are $$0$$. Because $$\mathbf{a}^{\alpha}(0)$$ and $$\mathbf{b}^{\alpha}(0)$$ point in the same direction, the first term of equation $$(5)$$ and equation $$(6)$$ will only change the magnitudes of $$\mathbf{a}^{\alpha}$$ and $$\mathbf{b}^{\alpha}$$, not their directions. Thus, we can write $$\mathbf{a}^{\alpha}(t) = a_{\alpha}(t) \mathbf{r}^{\alpha}$$ and $$\mathbf{b}^{\alpha}(t) = b_{\alpha}(t) \mathbf{r}^{\alpha}$$. Plugging these into equations $$(5)$$ and $$(6)$$, we find
+
+$$
+\begin{align}
+
+\tau \frac{d a_{\alpha}}{dt} &= (s_{\alpha} - a_{\alpha} b_{\alpha}) b_{\alpha} \tag{7} \\
+\tau \frac{d b_{\alpha}}{dt} &= (s_{\alpha} - a_{\alpha} b_{\alpha}) a_{\alpha} \tag{8}
+
+\end{align}
+$$
+
+The global minimum fixed point in terms of the magnitudes is now $$a_{\alpha} b_{\alpha} = s_{\alpha}$$ for $$\alpha = 1, 2, ... N_2$$. Since we've assumed that $$a_{\alpha}(0) = b_{\alpha}(0)$$, we know that $$a_{\alpha}(t) = b_{\alpha}(t)$$ for all $$t$$, and we can simply consider the evolution of $$u_{\alpha} = a_{\alpha} b_{\alpha}$$:
+
+$$
+\begin{equation}
+
+\tau \frac{d u_{\alpha}}{dt} = 2a_{\alpha} \tau \frac{d a_{\alpha}}{dt} = 2 u_{\alpha} (s_{\alpha} - u_{\alpha})
+
+\end{equation}
+$$
+
+This equation can be solved via separation of variables:
+
+$$
+\begin{align}
+
+\frac{\tau}{2 u_{\alpha} (s_{\alpha} - u_{\alpha})} \frac{d u_{\alpha}}{dt} &= 1 \\
+\frac{\tau}{2} \int_{u_{\alpha}(0)}^{u_{\alpha}(t)} \frac{1}{u_{\alpha} (s_{\alpha} - u_{\alpha})} du_{\alpha} &= \int_{0}^{t} 1 dt' \\
+\frac{\tau}{2s} \ln \frac{u_{\alpha}(t) [s_{\alpha} - u_{\alpha}(0)]}{u_{\alpha}(0) [s_{\alpha} - u_{\alpha}(t)]} &= t
+
+\end{align}
+$$
+
+Rearranging this, we find the solution to be
+
+$$
+\begin{equation}
+\tag{9}
+
+u_{\alpha}(t) = \frac{s_{\alpha} e^{2 s_{\alpha} t / \tau}}{e^{2 s_{\alpha} t / \tau} - 1 + s_{\alpha} / u_{\alpha}(0)}
+
+\end{equation}
+$$
