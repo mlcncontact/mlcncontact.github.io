@@ -9,3 +9,5 @@ Contact: mlcncontact@gmail.com
 ## List of posts
 
 [Spectral graph networks: generalizing convolutional layers to graph data]({% post_url 2023-08-05-spectral-graph-networks %})
+
+[Exact solutions to the learning dynamics of a deep neural network]({% post_url 2023-09-10-learning-in-linear-nn %})

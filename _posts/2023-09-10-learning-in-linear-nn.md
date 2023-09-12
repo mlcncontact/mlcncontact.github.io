@@ -1,7 +1,7 @@
 ---
 layout: post
 title:  "Exact solutions to the learning dynamics of a deep neural network"
-date:   2023-09-03 20:00:00 -0700
+date:   2023-09-10 20:00:00 -0700
 ---
 
 We don't have a general understanding of how deep neural networks learn. As a step towards a general understanding, [Saxe et al. (2014)](https://arxiv.org/abs/1312.6120) worked out exact solutions to the learning dynamics of a class of simple deep learning problems. In this post I'll write about one of the scenarios they analyzed: linear neural networks with a single hidden layer, squared error loss, and certain simple input patterns and initializations of weights. This is as simple a deep learning problem as you can get--however, despite the linearity of the network, learning here exhibits interesting nonlinear dynamics similar to what are seen with nonlinear networks.
