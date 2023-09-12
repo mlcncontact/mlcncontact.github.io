@@ -73,9 +73,9 @@ $$
 \begin{equation}
 \begin{split}
 
-\mathbf{x}^T \mathbf{L} \mathbf{x} & = \underbrace{\mathbf{x}_a^2 + 3\mathbf{x}_b^2 + \mathbf{x}_c^2 + \mathbf{x}_d^2}_{\substack{\textrm{one square term per} \\ \text{connection to a node}}} \underbrace{- 2\mathbf{x}_a \mathbf{x}_b - 2\mathbf{x}_b \mathbf{x}_c - 2\mathbf{x}_b \mathbf{x}_d}_\textrm{two cross terms for each connection} \\
+\mathbf{x}^T \mathbf{L} \mathbf{x} & = \underbrace{x_a^2 + 3x_b^2 + x_c^2 + x_d^2}_{\substack{\textrm{one square term per} \\ \text{connection to a node}}} \underbrace{- 2x_a x_b - 2x_b x_c - 2x_b x_d}_\textrm{two cross terms for each connection} \\
 
-& = (\mathbf{x}_a - \mathbf{x}_b)^2 + (\mathbf{x}_b - \mathbf{x}_c)^2 + (\mathbf{x}_b - \mathbf{x}_d)^2
+& = (x_a - x_b)^2 + (x_b - x_c)^2 + (x_b - x_d)^2
 
 \end{split}
 \end{equation}
@@ -88,7 +88,7 @@ Now suppose $$\mathbf{v}^{(i)}$$ is an eigenvector of $$\mathbf{L}$$ normalized 
 
 ## Convolutions for graph data
 
-Similar to how standard convolutions can be expressed in the spectral domain as in equation (1), we can define convolutions for graph data $$\mathbf{x}$$ as $$\mathbf{V} \mathbf{W} \mathbf{V}^T \mathbf{x}$$, where $$\mathbf{V}$$ is the matrix whose columns are the eigenvectors of the graph Laplacian, and $$\mathbf{W}$$ is a diagonal matrix containing filter weights in the spectral domain. Again, in words, this is decomposing $$\mathbf{x}$$ into a sum of the eigenvectors of the graph Laplacian ($$\mathbf{V}^T \mathbf{x}$$), scaling each eigenvector independently from the others ($$\mathbf{W} \mathbf{V}^T \mathbf{x}$$), and then summing up the scaled eigenvectors ($$\mathbf{V} \mathbf{W} \mathbf{V}^T \mathbf{x}$$).
+Similar to how standard convolutions can be expressed in the spectral domain as in equation $$(1)$$, we can define convolutions for graph data $$\mathbf{x}$$ as $$\mathbf{V} \mathbf{W} \mathbf{V}^T \mathbf{x}$$, where $$\mathbf{V}$$ is the matrix whose columns are the eigenvectors of the graph Laplacian, and $$\mathbf{W}$$ is a diagonal matrix containing filter weights in the spectral domain. Again, in words, this is decomposing $$\mathbf{x}$$ into a sum of the eigenvectors of the graph Laplacian ($$\mathbf{V}^T \mathbf{x}$$), scaling each eigenvector independently from the others ($$\mathbf{W} \mathbf{V}^T \mathbf{x}$$), and then summing up the scaled eigenvectors ($$\mathbf{V} \mathbf{W} \mathbf{V}^T \mathbf{x}$$).
 
 Graph convolutions defined in this way is not just an operation analogous to standard convolutions; it can be considered a generalization of standard convolutions. Consider the ring graph shown in Figure 2. {% include marginfigure.html id="ring_graph" url="assets/img/ring_graph.svg" description="**Figure 2.** A ring graph. Its graph Laplacian is a circulant matrix." %} Its graph Laplacian is
 
