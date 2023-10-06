@@ -111,3 +111,7 @@ We can see that it is a circulant matrix, which means that its eigenvectors are 
 In the spectral network of Bruna et al., a convolutional layer multiplies its input by $$\mathbf{V} \mathbf{W} \mathbf{V}^T$$ and then applies an elementwise nonlinearity, and the diagonal elements of $$\mathbf{W}$$ are the parameters being learned. In addition, they had two ways of reducing the dimensionality of the spectral domain. First, for a given layer, one could use only a subset of the graph Laplacian eigenvectors for the transform to and inverse transform from the spectral domain. Second, instead of fitting all the diagonal elements of $$\mathbf{W}$$, one could use a low-dimensional basis for those elements, and fit the coefficients of that low-dimensional basis instead.
 
 Finally, I'll mention one limitation of this kind of networks. Because different graphs have different graph Laplacians, a network trained on data from one graph does not transfer to data from other graphs. To be fair, standard convolutional networks actually have the same limitation: a convolutional network trained on images also does not transfer to data from graphs that are not regular grids (of course, we don't think of this as a limitation because we don't need it to transfer outside the domain of images).
+
+## References
+
+Bruna, J., Zaremba, W., Szlam, A., & LeCun, Y. (2014). Spectral networks and locally connected networks on graphs. *arXiv*.
