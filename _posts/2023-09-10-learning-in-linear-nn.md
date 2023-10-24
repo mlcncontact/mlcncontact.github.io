@@ -69,7 +69,7 @@ $$
 \end{equation}
 $$
 
-The fixed point of this equation is $$W_{ij}^{FP} = C_{ij}^{31}$$, and the solution is
+This is a linear differential equation; its fixed point is $$W_{ij}^{FP} = C_{ij}^{31}$$, and its solution is
 
 $$
 \begin{equation}
@@ -265,4 +265,4 @@ As a final note, let's consider a phenomenon that is sometimes observed when tra
 
 Baldi, P., & Hornik, K. (1989). Neural networks and principal component analysis: Learning from examples without local minima. *Neural Networks*.
 
-Saxe, A. M., McClelland, J. L., & Ganguli, S. (2014). Exact solutions to the nonlinear dynamics of learning in deep linear neural networks. *arXiv*.
+Saxe, A. M., McClelland, J. L., & Ganguli, S. (2014). Exact solutions to the nonlinear dynamics of learning in deep linear neural networks. *ICLR*.

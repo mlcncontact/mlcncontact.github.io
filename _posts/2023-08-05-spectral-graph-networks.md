@@ -114,4 +114,4 @@ Finally, I'll mention one limitation of this kind of networks. Because different
 
 ## References
 
-Bruna, J., Zaremba, W., Szlam, A., & LeCun, Y. (2014). Spectral networks and locally connected networks on graphs. *arXiv*.
+Bruna, J., Zaremba, W., Szlam, A., & LeCun, Y. (2014). Spectral networks and locally connected networks on graphs. *ICLR*.
