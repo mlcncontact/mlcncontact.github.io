@@ -69,7 +69,7 @@ $$
 \end{equation}
 $$
 
-The fixed point of this equation is $$W_{ij}^{FP} = C_{ij}^{31}$$, and the solution is
+This is a linear differential equation; its fixed point is $$W_{ij}^{FP} = C_{ij}^{31}$$, and its solution is
 
 $$
 \begin{equation}
@@ -81,7 +81,7 @@ $$
 
 Thus, during learning, each element of $$\mathbf{W}$$ independently and exponentially decays towards its fixed point, with time constant $$\tau$$.
 
-To summarize, for a linear regression model and orthogonal input variables, (i) different weights do not interact with each other during learning, (ii) the learning process has a single fixed point ($$\mathbf{W}^{FP} = \mathbf{C}^{31}$$), which is stable, and (iii) all weights learn with the same timescale. Next, we consider a linear neural network with a single hidden layer, which simply replaces the weight matrix $$\mathbf{W}$$ of linear regression with a product of two matrices $$\mathbf{W}^{32} \mathbf{W}^{21}$$ as its input-output mapping. However, as we will see, despite the similarity, it exhibits very different learning dynamics, where all three of our conclusions about linear regression are no longer true.
+To summarize, for a linear regression model and orthogonal input variables, (i) the learning dynamics is linear, (ii) different weights do not interact with each other during learning, (iii) the learning process has a single fixed point ($$\mathbf{W}^{FP} = \mathbf{C}^{31}$$), which is stable, and (iv) all weights learn with the same timescale. Next, we consider a linear neural network with a single hidden layer, which simply replaces the weight matrix $$\mathbf{W}$$ of linear regression with a product of two matrices $$\mathbf{W}^{32} \mathbf{W}^{21}$$ as its input-output mapping. However, as we will see, despite the similarity, it exhibits very different learning dynamics, where all four of our conclusions about linear regression are no longer true.
 
 ## Learning dynamics of linear neural networks
 
@@ -260,3 +260,9 @@ $$
 Now let's think about what this means. {% include marginfigure.html id="learning_curves" url="assets\img\linear_mode_learning_curves.svg" description="**Figure 1.** Taken from Saxe et al. (2014). The curves are input-output mapping strengths for a number of $$\alpha$$'s; each color is a different network.  Red curves show equation $$(9)$$ (linear network initialized in the decoupled regime). Blue curves show a simulation of a linear network with random weight initializations. Green curves show a simulation of a nonlinear network with $$\tanh$$ activation functions." %}$$u_{\alpha} = a_{\alpha} b_{\alpha} \mathbf{r}^{\alpha T} \mathbf{r}^{\alpha} = \mathbf{b}^{\alpha T} \mathbf{a}^{\alpha}$$ is the extent to which input mode $$\alpha$$ drives output mode $$\alpha$$, with $$\mathbf{r}^{\alpha}$$ being a direction in hidden unit space that serves as a relay between the two modes. Each $$u_{\alpha}$$, and thus the connection strength between each pair of input mode $$\alpha$$ and output mode $$\alpha$$, learns independently. $$u_{\alpha}$$ is a sigmoid function of time, approaching the optimal connection strength $$s_{\alpha}$$ as $$t \to \infty$$, with effective time constant $$\frac{\tau}{2 s_{\alpha}}$$. $$s_{\alpha}$$ is the correlation strength between input mode $$\alpha$$ and output mode $$\alpha$$ in the training set; thus, the stronger the correlation, the faster the network learns to map an input mode to its corresponding output mode. Figure 1, taken from Saxe et al. (2014), shows equation $$(9)$$ for a number of $$\alpha$$'s, where we can see their different timescales of learning. It also shows learning dynamics for the same linear network but with random weight initializations, as well as a nonlinear version of the network; we can see that equation $$(9)$$ provides a reasonable approximation to both.
 
 As a final note, let's consider a phenomenon that is sometimes observed when training nonlinear deep neural networks. During training, sometimes the loss function plateaus for a while, and then drops sharply to a lower level. It's possible that the learning dynamics of equation $$(9)$$ and Figure 1 offers an explanation: the plateau could be when learning for one $$u_{\alpha}$$ has saturated while $$u_{\alpha + 1}$$ has not reached the rapidly rising phase of its sigmoid, and when it does reach it the loss drops quickly.
+
+## References
+
+Baldi, P., & Hornik, K. (1989). Neural networks and principal component analysis: Learning from examples without local minima. *Neural Networks*.
+
+Saxe, A. M., McClelland, J. L., & Ganguli, S. (2014). Exact solutions to the nonlinear dynamics of learning in deep linear neural networks. *ICLR*.
