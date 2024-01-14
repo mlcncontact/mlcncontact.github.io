@@ -18,4 +18,4 @@ Contact: mlcncontact@gmail.com
 
 ### Computational neuroscience
 
-Coming soon.
+Coming.
